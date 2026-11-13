@@ -200,10 +200,11 @@ function renderHangul(line){
 }
 function speakHangul(ch,button){
  const feedback=$('hangulFeedback'),speech=window.speechSynthesis;
+ feedback.textContent='';
  if(!speech||!window.SpeechSynthesisUtterance){feedback.textContent='Korean speech is unavailable in this browser.';return}
  const rank=v=>/natural|neural|premium|enhanced/i.test(v.name)?3:/google/i.test(v.name)?2:/yuna|sunhi|injoon/i.test(v.name)?1:0;
  const voice=speech.getVoices().filter(v=>/^ko(?:[-_]|$)/i.test(v.lang)).sort((a,b)=>rank(b)-rank(a))[0];
- if(!voice){feedback.textContent='No Korean voice found. Enable a Korean text-to-speech voice on your device.';return}
+ if(!voice)return
  stop();speech.cancel();
  const utterance=new SpeechSynthesisUtterance(ch);utterance.lang='ko-KR';utterance.voice=voice;utterance.rate=.9;
  utterance.onend=()=>{
